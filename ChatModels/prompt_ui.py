@@ -1,7 +1,8 @@
 from langchain_huggingface import ChatHuggingFace, HuggingFaceEndpoint
 from dotenv import load_dotenv
 import streamlit as st
-from langchain_core.prompts import PromptTemplate
+from langchain_core.prompts import PromptTemplate,load_prompt
+
 load_dotenv()
 llm = HuggingFaceEndpoint(
 repo_id="meta-llama/Meta-Llama-3-8B-Instruct",
@@ -18,10 +19,7 @@ length_input=st.selectbox("select explanation length",["Beginner friendly","Tech
 
 #template
 
-template = PromptTemplate(
-    template= """Please summarize the research paper titled \"{paper_input}\" with the following specifications:\nExplanation Style: {style_input}  \nExplanation Length: {length_input}  \n1. Mathematical Details:  \n   - Include relevant mathematical equations if present in the paper.  \n   - Explain the mathematical concepts using simple, intuitive code snippets where applicable.  \n2. Analogies:  \n   - Use relatable analogies to simplify complex ideas.  \nIf certain information is not available in the paper, respond with: \"Insufficient information available\" instead of guessing.  \nEnsure the summary is clear, accurate, and aligned with the provided style and length.""",
-    input_variables=["paper_input","style_input","lenght_input"]
-)
+template= load_prompt('template.json')
 
 prompt = template.invoke({
     'paper_input':paper_input,
